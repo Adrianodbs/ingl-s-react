@@ -14,7 +14,24 @@ function DicionarioPage() {
     setDetail(item)
   }
   return (
-    <div className="tabela-modal">
+    <div className="tabela-content">
+      <form className='formulario'>
+        <h2>Registre uma palavra</h2>
+        <div className='campo-input'>
+          <label htmlFor="palavra">Palavra</label>
+          <input id='palavra' type="text" />
+        </div>
+        <div className='campo-input'>
+          <label htmlFor="traducao">Tradução</label>
+          <input id='traducao' type="text" />
+        </div>
+        <div className='campo-input'>
+          <label htmlFor="aplicacao">Aplicação em frase</label>
+          <input id='aplicacao' type="text" />
+        </div>
+
+        <button>Cadastrar palavra</button>
+      </form> 
         <table className="tabela">
           <thead>
             <tr>
@@ -27,8 +44,8 @@ function DicionarioPage() {
             {dicionario.map(item=>{
               return(
                 <tr>
-                  <th>{item.Palavra}</th>
-                  <th>{item.Traducao}</th>
+                  <td>{item.Palavra}</td>
+                  <td>{item.Traducao}</td>
                   <button onClick={(()=> togglePostModal(item))}>Aplicação em frase</button>
                 </tr>
               )
