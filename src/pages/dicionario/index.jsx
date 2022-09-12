@@ -1,5 +1,6 @@
 import './style.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import {FaTrash} from 'react-icons/fa'
 
 import '../../components/modal'
 
@@ -39,19 +40,31 @@ function DicionarioPage() {
 
   function enviarPalavra (e){
     e.preventDefault()
-     const data = {
+
+    if(palavra !== '' || traducao !== '' || uso !== ''){
+      const data = {
       Palavra: palavra,
       Traducao: traducao,
       Uso: uso
      }
 
      setPalavrasTreinamento([...palavrasTreinamento, data])
-
+    }
 
     setPalavra('')
     setTraducao('')
     setUso('')
   }
+
+  const handleDelete = useCallback(
+    repo => {
+      // Ele vai filtrar todos os repositórios e só vai devolver para essa constante todos os repositorios que forem diferentes desse que ele tá mandando
+      const find = palavrasTreinamento.filter(r => r.Palavra !== repo)
+
+      setPalavrasTreinamento(find)
+    },
+    [palavrasTreinamento]
+  )
 
   return (
     <div className="tabela-content">
@@ -82,10 +95,10 @@ function DicionarioPage() {
           </thead>
           <tbody className="tabela-dicionario">
             {palavrasTreinamento.map((p)=>(
-              <tr className='tr__pai'>
+              <tr className='tr__pai' key={p.Palavra}>
                   <td>{p.Palavra}</td>
                   <td>{p.Traducao}</td>
-                  <span className='td__modal'><p>Aplicação em uma frase:</p> {p.Uso}</span>
+                  <span className='td__modal'><p><button onClick={() => handleDelete(p.Palavra)}><FaTrash className='lixo' size={14}/></button> Aplicação em uma frase:</p> {p.Uso}</span>
                 </tr>
                 
             ))}
