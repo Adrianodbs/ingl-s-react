@@ -1,12 +1,15 @@
 import './style.css'
 import { useState } from 'react'
-
 import Modal from '../../components/modal'
+import '../../components/modal'
+
+import {FiX} from 'react-icons/fi'
+
 
 function DicionarioPage() {
 
   const [showPostModal, setShowPostModal] = useState(false)
-  // const [detail, setDetail] = useState()
+  const [detail, setDetail] = useState()
 
   const [palavra, setPalavra] =useState('')
   const [traducao, setTraducao] =useState('')
@@ -15,9 +18,9 @@ function DicionarioPage() {
   const [palavrasTreinamento, setPalavrasTreinamento] = useState([])
 
   
-  function togglePostModal (){
+  function togglePostModal (item){
     setShowPostModal(!showPostModal)
-    setUso(uso)
+    setPalavrasTreinamento(item)
   }
 
   function enviarPalavra (e){
@@ -60,24 +63,25 @@ function DicionarioPage() {
             <tr>
               <th scope="col">Inglês</th>
               <th scope="col">Português</th>
-              <th scope="col">Aplicação</th>
+              {/* <th scope="col">Aplicação</th> */}
             </tr>
           </thead>
           <tbody className="tabela-dicionario">
             {palavrasTreinamento.map((p)=>(
-              <tr key={p.Palavra}>
+              <tr className='tr__pai'>
                   <td>{p.Palavra}</td>
                   <td>{p.Traducao}</td>
-                  <button onClick={(()=> togglePostModal())}>Aplicação em frase</button>
+                  <span className='td__modal'><p>Aplicação em uma frase:</p> {p.Uso}</span>
                 </tr>
+                
             ))}
                 
-           
+           {/* {showPostModal && (
+            <Modal conteudo={palavrasTreinamento} close={togglePostModal} />
+            )} */}
           </tbody>
         </table>
-        {showPostModal && (
-          <Modal conteudo={uso} close={togglePostModal} />
-        )}
+        
     </div>
      
   )

@@ -1,8 +1,9 @@
-import './style.css'
+import './modal.css'
 
 import {FiX} from 'react-icons/fi'
 
 function Modal({conteudo, close}) {
+  console.log(conteudo.Uso)
   return (
     <div className='modal'>
       <div className='container'>
@@ -13,9 +14,7 @@ function Modal({conteudo, close}) {
 
         <div>
           <h2>Aplicação em frase</h2>
-
-          <span>{conteudo.Uso}</span>
-         
+          <span>{conteudo}</span>
         </div>
       </div>
     </div>

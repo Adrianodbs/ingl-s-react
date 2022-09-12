@@ -68,7 +68,7 @@
 
 .tabela thead tr, .tabela tbody tr{
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr;
+  grid-template-columns: 2fr 2fr;
   gap: 20px;
   
 }
@@ -85,14 +85,47 @@
 .tabela tbody tr td{
   border-bottom: 1px solid #aaa8a8;
   padding-bottom: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 65px;
   font-size: 20px;
   font-weight: bold;
   color: rebeccapurple;
 }
 
+.td__aplicacao{
+  color: blue;
+  border: 1px solid #010101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  padding: 0 5px;
+  cursor: pointer;
+}
 
-.tabela tbody tr button{
+.tr__pai{
+  position: relative;
+}
+
+.td__modal{
+  position: absolute;
+  top: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 16px;
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 7px;
+}
+
+.td__modal p{
+  color: #f65835;
+}
+
+
+/* .tabela tbody tr button{
   border: 0;
   padding: 5px 10px;
   font-weight: bold;
@@ -100,4 +133,4 @@
   margin-bottom: 10px;
   border-radius: 5px;
   box-shadow: 0 0 3px rgba(0, 0, 0, .6)
-}
+} */
