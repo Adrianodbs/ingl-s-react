@@ -1,7 +1,6 @@
 import './style.css'
 
 import {FiX} from 'react-icons/fi'
-import {dicionario} from '../../texto'
 
 function Modal({conteudo, close}) {
   return (
