@@ -1,15 +1,15 @@
 import './style.css'
-import { useState } from 'react'
-import Modal from '../../components/modal'
+import { useState, useEffect } from 'react'
+
 import '../../components/modal'
 
-import {FiX} from 'react-icons/fi'
+
 
 
 function DicionarioPage() {
 
-  const [showPostModal, setShowPostModal] = useState(false)
-  const [detail, setDetail] = useState()
+  // const [showPostModal, setShowPostModal] = useState(false)
+
 
   const [palavra, setPalavra] =useState('')
   const [traducao, setTraducao] =useState('')
@@ -17,11 +17,25 @@ function DicionarioPage() {
 
   const [palavrasTreinamento, setPalavrasTreinamento] = useState([])
 
+   //Buscar
+   useEffect(() => {
+    const palavrasStorage = localStorage.getItem('bancoDePalavras')
+
+    if (palavrasStorage) {
+      setPalavrasTreinamento(JSON.parse(palavrasStorage))
+    }
+  }, [])
+
+  //Salvar Alterações
+  useEffect(() => {
+    localStorage.setItem('bancoDePalavras', JSON.stringify(palavrasTreinamento))
+  }, [palavrasTreinamento])
+
   
-  function togglePostModal (item){
-    setShowPostModal(!showPostModal)
-    setPalavrasTreinamento(item)
-  }
+  // function togglePostModal (item){
+  //   setShowPostModal(!showPostModal)
+  //   setPalavrasTreinamento(item)
+  // }
 
   function enviarPalavra (e){
     e.preventDefault()
