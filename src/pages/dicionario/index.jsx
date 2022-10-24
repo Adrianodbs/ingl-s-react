@@ -3,20 +3,38 @@ import { useState, useEffect, useCallback } from 'react'
 import {FaTrash} from 'react-icons/fa'
 
 
-import Modal from '../../components/modal'
 
-export default function DicionarioPage(){
+
+
+function DicionarioPage() {
+
   const [showPostModal, setShowPostModal] = useState(false)
-  
+
+
   const [palavra, setPalavra] =useState('')
   const [traducao, setTraducao] =useState('')
   const [uso, setUso] =useState('')
 
   const [palavrasTreinamento, setPalavrasTreinamento] = useState([])
 
+   //Buscar
+   useEffect(() => {
+    const palavrasStorage = localStorage.getItem('bancoDePalavras')
+
+    if (palavrasStorage) {
+      setPalavrasTreinamento(JSON.parse(palavrasStorage))
+    }
+  }, [])
+
+  //Salvar Alterações
+  useEffect(() => {
+    localStorage.setItem('bancoDePalavras', JSON.stringify(palavrasTreinamento))
+  }, [palavrasTreinamento])
+
+  
   function togglePostModal (item){
     setShowPostModal(!showPostModal)
-    // setPalavrasTreinamento(item)
+    setPalavrasTreinamento(item)
   }
 
   function enviarPalavra (e){
@@ -30,17 +48,26 @@ export default function DicionarioPage(){
      }
 
      setPalavrasTreinamento([...palavrasTreinamento, data])
-
-     console.log(palavrasTreinamento)
     }
 
     setPalavra('')
     setTraducao('')
     setUso('')
   }
- return(
-  <div className="tabela-content">
-    <form className='formulario' onSubmit={enviarPalavra}>
+
+  const handleDelete = useCallback(
+    repo => {
+      // Ele vai filtrar todos os repositórios e só vai devolver para essa constante todos os repositorios que forem diferentes desse que ele tá mandando
+      const find = palavrasTreinamento.filter(r => r.Palavra !== repo)
+
+      setPalavrasTreinamento(find)
+    },
+    [palavrasTreinamento]
+  )
+
+  return (
+    <div className="tabela-content">
+      <form className='formulario' onSubmit={enviarPalavra}>
         <h2>Registre uma palavra</h2>
         <div className='campo-input'>
           <label htmlFor="palavra">Palavra</label>
@@ -54,28 +81,35 @@ export default function DicionarioPage(){
           <label htmlFor="aplicacao">Aplicação em frase</label>
           <input id='aplicacao' type="text" value={uso} onChange={e => setUso(e.target.value)} />
         </div>
-        <button type='submit'>Cadastrar palavra</button>
-      </form>
 
+        <button type='submit'>Cadastrar palavra</button>
+      </form> 
+        <table className="tabela">
+          <thead>
+            <tr>
+              <th scope="col">Inglês</th>
+              <th scope="col">Português</th>
+              {/* <th scope="col">Aplicação</th> */}
+            </tr>
+          </thead>
+          <tbody className="tabela-dicionario">
+            {palavrasTreinamento.map((p)=>(
+              <tr className='tr__pai' key={p.Palavra}>
+                  <td>{p.Palavra}</td>
+                  <td>{p.Traducao}</td>
+ 
+                  <span className='td__modal'><p><button onClick={() => handleDelete(p.Palavra)}><FaTrash className='lixo' size={14}/></button> Aplicação em uma frase:</p> {p.Uso}</span>
+                </tr>
+                
+                
+            ))}
+
+          </tbody>
+        </table>
         
-        {palavrasTreinamento.map((p)=>(
-          <div className='map_tabela'>
-            <div className='map_palavra' key={p.Palavra}>
-              <p>{p.Palavra}</p>
-            </div>
-            <div className='map_traducao' key={p.Traducao}>
-              <p>{p.Traducao}</p>
-            </div>
-            <div className='map_uso' key={p.Uso}>
-              <button onClick={togglePostModal}>Aplicação em frase</button>
-              {/* {togglePostModal && <Modal conteudo={p} close={togglePostModal} />} */}
-            </div>
-            {/* <Modal conteudo={p} close={togglePostModal} /> */}
-          </div>
-        ))}
-        
-        
-      
-  </div>
- )
+    </div>
+     
+  )
 }
+
+export default DicionarioPage
