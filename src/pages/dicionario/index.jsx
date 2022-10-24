@@ -1,9 +1,9 @@
 import './style.css'
 import { useState, useEffect, useCallback } from 'react'
 import {FaTrash} from 'react-icons/fa'
+import '../../components/modal/modal.css'
 
-
-
+import {FiX} from 'react-icons/fi'
 
 
 function DicionarioPage() {
@@ -31,11 +31,6 @@ function DicionarioPage() {
     localStorage.setItem('bancoDePalavras', JSON.stringify(palavrasTreinamento))
   }, [palavrasTreinamento])
 
-  
-  function togglePostModal (item){
-    setShowPostModal(!showPostModal)
-    setPalavrasTreinamento(item)
-  }
 
   function enviarPalavra (e){
     e.preventDefault()
@@ -53,6 +48,10 @@ function DicionarioPage() {
     setPalavra('')
     setTraducao('')
     setUso('')
+  }
+
+  const openModal = () =>{
+    setShowPostModal(!showPostModal)
   }
 
   const handleDelete = useCallback(
@@ -98,17 +97,28 @@ function DicionarioPage() {
                   <td>{p.Palavra}</td>
                   <td>{p.Traducao}</td>
  
-                  <span className='td__modal'><p><button onClick={() => handleDelete(p.Palavra)}><FaTrash className='lixo' size={14}/></button> Aplicação em uma frase:</p> {p.Uso}</span>
-                </tr>
-                
-                
+                  {/* <span className='td__modal'><p><button onClick={() => handleDelete(p.Palavra)}><FaTrash className='lixo' size={14}/></button> Aplicação em uma frase:</p> {p.Uso}</span> */}
+                  <span className='td__modal' onClick={openModal}><button>ver</button></span>
+                  {showPostModal && (
+                    <div className='modal'>
+                    <div className='container'>
+                      <button className='close' onClick={openModal}>
+                        <FiX size={23} color='#fff' />
+                        Voltar
+                      </button>
+              
+                      <div>
+                        <h2>Aplicação em frase:</h2>
+                        <span>{p.Uso}</span>
+                      </div>
+                    </div>
+                  </div>
+                  )}
+                </tr>                
             ))}
-
           </tbody>
-        </table>
-        
-    </div>
-     
+        </table>        
+    </div>     
   )
 }
 
