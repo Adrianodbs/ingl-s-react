@@ -9,6 +9,7 @@ import {FiX} from 'react-icons/fi'
 function DicionarioPage() {
 
   const [showPostModal, setShowPostModal] = useState(false)
+  const [selecionada, setSelecionada] = useState(false)
 
 
   const [palavra, setPalavra] =useState('')
@@ -63,6 +64,7 @@ function DicionarioPage() {
     },
     [palavrasTreinamento]
   )
+  
 
   return (
     <div className="tabela-content">
@@ -88,17 +90,21 @@ function DicionarioPage() {
             <tr>
               <th scope="col">Inglês</th>
               <th scope="col">Português</th>
-              {/* <th scope="col">Aplicação</th> */}
+              <th scope="col">Aplicação</th>
             </tr>
           </thead>
           <tbody className="tabela-dicionario">
             {palavrasTreinamento.map((p)=>(
-              <tr className='tr__pai' key={p.Palavra}>
+              <tr className='tr__pai' key={p.Uso}>
+                  
                   <td>{p.Palavra}</td>
                   <td>{p.Traducao}</td>
- 
-                  {/* <span className='td__modal'><p><button onClick={() => handleDelete(p.Palavra)}><FaTrash className='lixo' size={14}/></button> Aplicação em uma frase:</p> {p.Uso}</span> */}
-                  <span className='td__modal' onClick={openModal}><button>ver</button></span>
+                  <div className="tr__btn">
+                   <span ><button onClick={() => handleDelete(p.Palavra)}><FaTrash className='lixo' size={14}/></button></span>
+                  
+                  <span  onClick={()=>{openModal(); setSelecionada(p.Uso)}}><button>Aplicação em uma frase</button></span> 
+                  </div>
+                  
                   {showPostModal && (
                     <div className='modal'>
                     <div className='container'>
@@ -109,7 +115,7 @@ function DicionarioPage() {
               
                       <div>
                         <h2>Aplicação em frase:</h2>
-                        <span>{p.Uso}</span>
+                        <span>{selecionada}</span>
                       </div>
                     </div>
                   </div>
