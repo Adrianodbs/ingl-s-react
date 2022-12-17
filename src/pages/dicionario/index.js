@@ -12,8 +12,9 @@ import {
   collection,
   onSnapshot,
   query,
-  orderBy,
-  where
+  where,
+  doc,
+  deleteDoc
 } from 'firebase/firestore'
 
 function DicionarioPage() {
@@ -104,15 +105,11 @@ function DicionarioPage() {
     setShowPostModal(!showPostModal)
   }
 
-  const handleDelete = useCallback(
-    repo => {
-      // Ele vai filtrar todos os repositórios e só vai devolver para essa constante todos os repositorios que forem diferentes desse que ele tá mandando
-      const find = palavrasTreinamento.filter(r => r.Palavra !== repo)
+  async function handleDelete(id) {
+    const docRef = doc(db, 'palavras', id)
 
-      setPalavrasTreinamento(find)
-    },
-    [palavrasTreinamento]
-  )
+    await deleteDoc(docRef)
+  }
 
   async function deslogar() {
     await signOut(auth)
@@ -163,12 +160,12 @@ function DicionarioPage() {
         </thead>
         <tbody className="tabela-dicionario">
           {palavrasTreinamento.map(p => (
-            <tr className="tr__pai" key={p.Uso}>
-              <td>{p.Palavra}</td>
-              <td>{p.Traducao}</td>
+            <tr className="tr__pai" key={p.id}>
+              <td>{p.palavra}</td>
+              <td>{p.traducao}</td>
               <div className="tr__btn">
                 <span>
-                  <button onClick={() => handleDelete(p.Palavra)}>
+                  <button onClick={() => handleDelete(p.id)}>
                     <FaTrash className="lixo" size={14} />
                   </button>
                 </span>
@@ -176,7 +173,7 @@ function DicionarioPage() {
                 <span
                   onClick={() => {
                     openModal()
-                    setSelecionada(p.Uso)
+                    setSelecionada(p.uso)
                   }}
                 >
                   <button>Aplicação em uma frase</button>
