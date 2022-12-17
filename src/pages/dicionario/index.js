@@ -1,25 +1,25 @@
 import './style.css'
 import { useState, useEffect, useCallback } from 'react'
-import {FaTrash} from 'react-icons/fa'
+import { FaTrash } from 'react-icons/fa'
 import '../../components/modal/modal.css'
 
-import {FiX} from 'react-icons/fi'
+import { FiX } from 'react-icons/fi'
 
+import { auth } from '../../firebase/firebaseConnection'
+import { signOut } from 'firebase/auth'
 
 function DicionarioPage() {
-
   const [showPostModal, setShowPostModal] = useState(false)
   const [selecionada, setSelecionada] = useState(false)
 
-
-  const [palavra, setPalavra] =useState('')
-  const [traducao, setTraducao] =useState('')
-  const [uso, setUso] =useState('')
+  const [palavra, setPalavra] = useState('')
+  const [traducao, setTraducao] = useState('')
+  const [uso, setUso] = useState('')
 
   const [palavrasTreinamento, setPalavrasTreinamento] = useState([])
 
-   //Buscar
-   useEffect(() => {
+  //Buscar
+  useEffect(() => {
     const palavrasStorage = localStorage.getItem('bancoDePalavras')
 
     if (palavrasStorage) {
@@ -32,18 +32,17 @@ function DicionarioPage() {
     localStorage.setItem('bancoDePalavras', JSON.stringify(palavrasTreinamento))
   }, [palavrasTreinamento])
 
-
-  function enviarPalavra (e){
+  function enviarPalavra(e) {
     e.preventDefault()
 
-    if(palavra !== '' || traducao !== '' || uso !== ''){
+    if (palavra !== '' || traducao !== '' || uso !== '') {
       const data = {
-      Palavra: palavra,
-      Traducao: traducao,
-      Uso: uso
-     }
+        Palavra: palavra,
+        Traducao: traducao,
+        Uso: uso
+      }
 
-     setPalavrasTreinamento([...palavrasTreinamento, data])
+      setPalavrasTreinamento([...palavrasTreinamento, data])
     }
 
     setPalavra('')
@@ -51,7 +50,7 @@ function DicionarioPage() {
     setUso('')
   }
 
-  const openModal = () =>{
+  const openModal = () => {
     setShowPostModal(!showPostModal)
   }
 
@@ -64,67 +63,96 @@ function DicionarioPage() {
     },
     [palavrasTreinamento]
   )
-  
+
+  async function deslogar() {
+    await signOut(auth)
+  }
 
   return (
     <div className="tabela-content">
-      <form className='formulario' onSubmit={enviarPalavra}>
+      <form className="formulario" onSubmit={enviarPalavra}>
+        <button onClick={deslogar}>Deslogar</button>
         <h2>Registre uma palavra</h2>
-        <div className='campo-input'>
+        <div className="campo-input">
           <label htmlFor="palavra">Palavra</label>
-          <input id='palavra' type="text" value={palavra} onChange={e => setPalavra(e.target.value)} />
+          <input
+            id="palavra"
+            type="text"
+            value={palavra}
+            onChange={e => setPalavra(e.target.value)}
+          />
         </div>
-        <div className='campo-input'>
+        <div className="campo-input">
           <label htmlFor="traducao">Tradução</label>
-          <input id='traducao' type="text" value={traducao} onChange={e => setTraducao(e.target.value)} />
+          <input
+            id="traducao"
+            type="text"
+            value={traducao}
+            onChange={e => setTraducao(e.target.value)}
+          />
         </div>
-        <div className='campo-input'>
+        <div className="campo-input">
           <label htmlFor="aplicacao">Aplicação em frase</label>
-          <input id='aplicacao' type="text" value={uso} onChange={e => setUso(e.target.value)} />
+          <input
+            id="aplicacao"
+            type="text"
+            value={uso}
+            onChange={e => setUso(e.target.value)}
+          />
         </div>
 
-        <button type='submit'>Cadastrar palavra</button>
-      </form> 
-        <table className="tabela">
-          <thead>
-            <tr>
-              <th scope="col">Inglês</th>
-              <th scope="col">Português</th>
-              <th scope="col">Aplicação</th>
-            </tr>
-          </thead>
-          <tbody className="tabela-dicionario">
-            {palavrasTreinamento.map((p)=>(
-              <tr className='tr__pai' key={p.Uso}>
-                  
-                  <td>{p.Palavra}</td>
-                  <td>{p.Traducao}</td>
-                  <div className="tr__btn">
-                   <span ><button onClick={() => handleDelete(p.Palavra)}><FaTrash className='lixo' size={14}/></button></span>
-                  
-                  <span  onClick={()=>{openModal(); setSelecionada(p.Uso)}}><button>Aplicação em uma frase</button></span> 
-                  </div>
-                  
-                  {showPostModal && (
-                    <div className='modal'>
-                    <div className='container'>
-                      <button className='close' onClick={openModal}>
-                        <FiX size={23} color='#fff' />
-                        Voltar
-                      </button>
-              
-                      <div>
-                        <h2>Aplicação em frase:</h2>
-                        <span>{selecionada}</span>
-                      </div>
+        <button type="submit">Cadastrar palavra</button>
+      </form>
+      <table className="tabela">
+        <thead>
+          <tr>
+            <th scope="col">Inglês</th>
+            <th scope="col">Português</th>
+            <th scope="col">Aplicação</th>
+          </tr>
+        </thead>
+        <tbody className="tabela-dicionario">
+          {palavrasTreinamento.map(p => (
+            <tr className="tr__pai" key={p.Uso}>
+              <td>{p.Palavra}</td>
+              <td>{p.Traducao}</td>
+              <div className="tr__btn">
+                <span>
+                  <button onClick={() => handleDelete(p.Palavra)}>
+                    <FaTrash className="lixo" size={14} />
+                  </button>
+                </span>
+
+                <span
+                  onClick={() => {
+                    openModal()
+                    setSelecionada(p.Uso)
+                  }}
+                >
+                  <button>Aplicação em uma frase</button>
+                </span>
+              </div>
+
+              {showPostModal && (
+                <div className="modal">
+                  <div className="container">
+                    <button className="close" onClick={openModal}>
+                      <FiX size={23} color="#fff" />
+                      Voltar
+                    </button>
+
+                    <div>
+                      <h2>Aplicação em frase:</h2>
+                      <span>{selecionada}</span>
                     </div>
                   </div>
-                  )}
-                </tr>                
-            ))}
-          </tbody>
-        </table>        
-    </div>     
+                </div>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }
 
