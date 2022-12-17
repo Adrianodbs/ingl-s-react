@@ -7,7 +7,14 @@ import { FiX } from 'react-icons/fi'
 
 import { auth, db } from '../../firebase/firebaseConnection'
 import { signOut } from 'firebase/auth'
-import { addDoc, collection } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  where
+} from 'firebase/firestore'
 
 function DicionarioPage() {
   const [showPostModal, setShowPostModal] = useState(false)
@@ -39,6 +46,29 @@ function DicionarioPage() {
     async function loadPalavras() {
       const userDetail = localStorage.getItem('@detailUser')
       setUser(JSON.parse(userDetail))
+
+      if (userDetail) {
+        const data = JSON.parse(userDetail)
+
+        const palavraRef = collection(db, 'palavras')
+
+        const q = query(palavraRef, where('userUid', '==', data?.uid))
+
+        const unsub = onSnapshot(q, snapshot => {
+          let lista = []
+
+          snapshot.forEach(doc => {
+            lista.push({
+              id: doc.id,
+              palavra: doc.data().Palavra,
+              uso: doc.data().Uso,
+              traducao: doc.data().Traducao,
+              userUid: doc.data().userUid
+            })
+          })
+          setPalavrasTreinamento(lista)
+        })
+      }
     }
 
     loadPalavras()
@@ -48,7 +78,7 @@ function DicionarioPage() {
     e.preventDefault()
 
     if (palavra !== '' || traducao !== '' || uso !== '') {
-      await addDoc(collection(db, 'tarefas'), {
+      await addDoc(collection(db, 'palavras'), {
         Palavra: palavra,
         Traducao: traducao,
         Uso: uso,
