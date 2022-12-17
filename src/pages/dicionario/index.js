@@ -5,8 +5,9 @@ import '../../components/modal/modal.css'
 
 import { FiX } from 'react-icons/fi'
 
-import { auth } from '../../firebase/firebaseConnection'
+import { auth, db } from '../../firebase/firebaseConnection'
 import { signOut } from 'firebase/auth'
+import { addDoc, collection } from 'firebase/firestore'
 
 function DicionarioPage() {
   const [showPostModal, setShowPostModal] = useState(false)
@@ -17,6 +18,8 @@ function DicionarioPage() {
   const [uso, setUso] = useState('')
 
   const [palavrasTreinamento, setPalavrasTreinamento] = useState([])
+
+  const [user, setUser] = useState({})
 
   //Buscar
   useEffect(() => {
@@ -32,22 +35,39 @@ function DicionarioPage() {
     localStorage.setItem('bancoDePalavras', JSON.stringify(palavrasTreinamento))
   }, [palavrasTreinamento])
 
-  function enviarPalavra(e) {
+  useEffect(() => {
+    async function loadPalavras() {
+      const userDetail = localStorage.getItem('@detailUser')
+      setUser(JSON.parse(userDetail))
+    }
+
+    loadPalavras()
+  }, [])
+
+  async function enviarPalavra(e) {
     e.preventDefault()
 
     if (palavra !== '' || traducao !== '' || uso !== '') {
-      const data = {
+      await addDoc(collection(db, 'tarefas'), {
         Palavra: palavra,
         Traducao: traducao,
-        Uso: uso
-      }
+        Uso: uso,
+        userUid: user?.uid
+      })
+        .then(() => {
+          setPalavra('')
+          setTraducao('')
+          setUso('')
+        })
+        .catch(err => console.log(err))
 
-      setPalavrasTreinamento([...palavrasTreinamento, data])
+      // const data = {}
+
+      // setPalavrasTreinamento([...palavrasTreinamento, data])
+    } else {
+      alert('Preencha todos os campos')
+      return
     }
-
-    setPalavra('')
-    setTraducao('')
-    setUso('')
   }
 
   const openModal = () => {
