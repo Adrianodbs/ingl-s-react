@@ -1,7 +1,15 @@
 import './style.css'
 import { useState, useEffect, useCallback } from 'react'
 import { FaTrash } from 'react-icons/fa'
+import { GoSignOut } from 'react-icons/go'
 import '../../components/modal/modal.css'
+
+import soldado from '../../img/soldado.png'
+import cabo from '../../img/cabo.jpg'
+import sargento from '../../img/sargento.jpg'
+import capitao from '../../img/Capitao.png'
+import coronel from '../../img/Coronel.png'
+import marechal from '../../img/Marechal.gif'
 
 import { FiX } from 'react-icons/fi'
 
@@ -39,9 +47,9 @@ function DicionarioPage() {
   }, [])
 
   //Salvar Alterações
-  useEffect(() => {
-    localStorage.setItem('bancoDePalavras', JSON.stringify(palavrasTreinamento))
-  }, [palavrasTreinamento])
+  // useEffect(() => {
+  //   localStorage.setItem('bancoDePalavras', JSON.stringify(palavrasTreinamento))
+  // }, [palavrasTreinamento])
 
   useEffect(() => {
     async function loadPalavras() {
@@ -91,12 +99,7 @@ function DicionarioPage() {
           setUso('')
         })
         .catch(err => console.log(err))
-
-      // const data = {}
-
-      // setPalavrasTreinamento([...palavrasTreinamento, data])
     } else {
-      alert('Preencha todos os campos')
       return
     }
   }
@@ -117,9 +120,57 @@ function DicionarioPage() {
 
   return (
     <div className="tabela-content">
-      <form className="formulario" onSubmit={enviarPalavra}>
-        <button onClick={deslogar}>Deslogar</button>
+      <div className="title">
+        <GoSignOut
+          onClick={deslogar}
+          className="icon-logout"
+          size={25}
+          color="rebeccapurple"
+        />
         <h2>Registre uma palavra</h2>
+        <span>Nível do usuário:</span>
+        {palavrasTreinamento.length === 0 && (
+          <div className="patente">
+            <p>Soldado</p>
+            <img src={soldado} alt="Soldado" />
+          </div>
+        )}
+        {palavrasTreinamento.length > 0 && palavrasTreinamento.length < 10 && (
+          <div className="patente">
+            <p>Cabo</p>
+            <img src={cabo} alt="Soldado" />
+          </div>
+        )}
+        {palavrasTreinamento.length >= 10 &&
+          palavrasTreinamento.length < 30 && (
+            <div className="patente">
+              <p>Sargento</p>
+              <img src={sargento} alt="Soldado" />
+            </div>
+          )}
+        {palavrasTreinamento.length >= 30 &&
+          palavrasTreinamento.length < 50 && (
+            <div className="patente">
+              <p>Capitão</p>
+              <img src={capitao} alt="Soldado" />
+            </div>
+          )}
+        {palavrasTreinamento.length >= 50 &&
+          palavrasTreinamento.length < 100 && (
+            <div className="patente">
+              <p>Coronel</p>
+              <img src={coronel} alt="Soldado" />
+            </div>
+          )}
+        {palavrasTreinamento.length >= 100 && (
+          <div className="patente">
+            <p>Marechal</p>
+            <img src={marechal} alt="Soldado" />
+          </div>
+        )}
+      </div>
+
+      <form className="formulario" onSubmit={enviarPalavra}>
         <div className="campo-input">
           <label htmlFor="palavra">Palavra</label>
           <input

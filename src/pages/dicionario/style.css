@@ -6,6 +6,46 @@
   flex-direction: column;
 }
 
+.title{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.title h2{
+  color: rebeccapurple;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.icon-logout{
+  position: absolute;
+  right: 10%;
+  cursor: pointer;
+}
+
+.title span{
+  font-size: 22px;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.patente{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.patente img{
+  width: 20px;
+}
+
 /* Css do formulario */
 
 .formulario{
